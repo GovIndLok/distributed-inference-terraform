@@ -18,6 +18,11 @@ resource "aws_security_group" "ts_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    project = "di_assignment"
+    name    = "ts-worker-sg"
+  }
 }
 
 # PY worker security group 
@@ -29,15 +34,20 @@ resource "aws_security_group" "py_sg" {
     description     = "Allow TS worker via worker mesh"
     from_port       = 0
     to_port         = 0
-    protocol        = -1
+    protocol        = "-1"
     security_groups = [aws_security_group.ts_sg.id]
   }
 
   egress {
-    description = "Allow one way traffic for system setup"
+    description = "Allow outbound internet access"
     from_port   = 0
     to_port     = 0
-    protocol    = -1
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    project = "di_assignment"
+    name    = "ts-worker-sg"
   }
 }
