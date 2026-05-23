@@ -31,7 +31,7 @@ iii -version
 
 cd /opt
 
-git clone placeholder <repo >distributed-inference
+git clone https://github.com/GovIndLok/distributed-inference-terraform.git distributed-inference
 
 # Entering quickstart
 
