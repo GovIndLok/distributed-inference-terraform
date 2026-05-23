@@ -13,7 +13,7 @@ apt-get upgrade -y
 
 # Install Core Dependencies
 
-apt-get Install -y \
+apt-get install -y \
     curl \
     git \
     unzip \
@@ -26,6 +26,7 @@ apt-get Install -y \
 
 curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
 iii -version
+echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
 
 # Clone Repo
 
@@ -57,5 +58,6 @@ export III_URL="ws://${ts_private_ip}:49134"
 # Connect Inference Worker
 
 cd /opt/distributed-inference/quickstart
+export III_SANDBOX=process
 
 iii worker add ./workers/inference-worker

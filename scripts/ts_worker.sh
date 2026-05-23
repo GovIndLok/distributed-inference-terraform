@@ -13,7 +13,7 @@ apt-get upgrade -y
 
 # Install Core Dependencies
 
-apt-get Install -y \
+apt-get install -y \
     curl \
     git \
     unzip \
@@ -33,6 +33,7 @@ echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >>/root/.bashrc
 
 curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
 iii -version
+echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
 
 # Clone Repo
 
@@ -59,5 +60,6 @@ sleep 15
 # Connect Caller Worker
 
 export III_URL="ws://localhost:49134"
+export III_SANDBOX=process
 
 iii worker add ./workers/caller-worker
