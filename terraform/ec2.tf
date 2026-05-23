@@ -14,7 +14,7 @@ data "aws_ami" "ubunutu" {
   }
 }
 
-# TS worker Instance 
+# TS worker Instance
 resource "aws_instance" "ts_worker" {
   ami           = data.aws_ami.ubunutu.id
   instance_type = "t3.micro"
@@ -26,25 +26,18 @@ resource "aws_instance" "ts_worker" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
-  user_data = templatefile(
-    "${path.Module}/user_data/ts_worker.sh",
-    {
-      py_private_ip = aws_instance.py_worker.py_private_ip
-    }
-  )
+  user_data = file("${path.module}/../scripts/ts_worker.sh")
 
   tags = {
     project = "di_assignment"
     name    = "ts_worker"
   }
-
-  depends_on = [aws_instance.py_worker]
 }
 
-# PY worker Instance 
+# PY worker Instance
 resource "aws_instance" "py_worker" {
-  ami           = data.aws_ami.ubunutu
-  instance_type = "t3.medium"
+  ami           = data.aws_ami.ubunutu.id
+  instance_type = "m7i-flex.large"
 
   subnet_id              = aws_subnet.private_sn.id
   vpc_security_group_ids = [aws_security_group.py_sg.id]
@@ -53,7 +46,9 @@ resource "aws_instance" "py_worker" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
-  user_data = file("${path.module}/user_data/py_worker.sh")
+  user_data = templatefile("${path.module}/../scripts/py_worker.sh", {
+    ts_private_ip = aws_instance.ts_worker.private_ip
+  })
 
   tags = {
     project = "di_assignment"

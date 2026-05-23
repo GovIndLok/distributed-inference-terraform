@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-exec >/var/log/ts-worker-bootstrap.log 2>&1
+exec >/var/log/py-worker-bootstrap.log 2>&1
 
 echo "=-=-= PY worker Bootstrap =-=-="
 
@@ -25,39 +25,33 @@ apt-get install -y \
 # Installing iii engine
 
 curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
-iii -version
-echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
+iii --version
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
 
 # Clone Repo
-
-cd /opt
 
 git clone https://github.com/GovIndLok/distributed-inference-terraform.git distributed-inference
 
 # Entering quickstart
 
-cd /opt/distributed-inference/quickstart
+cd distributed-inference/quickstart
 
-# Creating Python VENV
+# Installing Python Dependencies (system-level — VM is dedicated to this worker)
 
 cd workers/inference-worker
 
-python3 -m venv venv
+pip3 install --upgrade pip
 
-source venv/bin/activate
-
-# Installing Dependencies
-pip install --upgrade pip
-
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # Connecting to remote iii engine
 
 export III_URL="ws://${ts_private_ip}:49134"
 
-# Connect Inference Worker
+# Connect Inference Worker (back at quickstart root)
 
-cd /opt/distributed-inference/quickstart
+cd ../..
 export III_SANDBOX=process
 
 iii worker add ./workers/inference-worker

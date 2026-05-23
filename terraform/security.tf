@@ -5,8 +5,8 @@ resource "aws_security_group" "ts_sg" {
 
   ingress {
     description = "HTTP API"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 3111
+    to_port     = 3111
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

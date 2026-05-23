@@ -23,30 +23,31 @@ apt-get install -y \
 
 curl -fsSL https://bun.sh/install | bash
 
-export BUN_INSTALL="/root/.bun"
+export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-echo 'export BUN_INSTALL="/root/.bun"' >>/root/.bashrc
-echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >>/root/.bashrc
+echo 'export BUN_INSTALL="$HOME/.bun"' >> "$HOME/.bashrc"
+echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$HOME/.bashrc"
 
 # Installing iii engine
 
 curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
-iii -version
-echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
+iii --version
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
 
 # Clone Repo
-
-cd /opt
 
 git clone https://github.com/GovIndLok/distributed-inference-terraform.git distributed-inference
 
 # Entering quickstart
 
-cd /opt/distributed-inference/quickstart
+cd distributed-inference/quickstart
 
 # Installing TS Dependencies
+cd workers/caller-worker
 bun install
+cd ../..
 
 # START III ENGINE
 
