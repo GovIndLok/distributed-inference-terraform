@@ -6,44 +6,7 @@ Deploys a Gemma 3 270M SLM behind a distributed worker mesh on AWS using Terrafo
 
 ## Architecture
 
-```
-                             Internet
-                                |
-                          [curl / API client]
-                                |
-                         POST :3111/v1/chat/completions
-                                |
-                    ~~~~~~~ Firewall ~~~~~~~
-                    |        :3111          |
-                    |     (0.0.0.0/0)       |
-                    |_______________________|
-                                |
-                     +---------------------+
-                     |  Public subnet       |
-                     |  10.0.1.0/24         |
-                     |                      |
-                     |  TS Worker (t3.micro)|
-                     |  - iii engine (:49134)|
-                     |  - caller-worker (TS)|
-                     |  - HTTP trigger(:3111)|
-                     +--------+------------+
-                              | ws://<private_ip>:49134
-                              |   (RPC / WebSocket)
-                     +--------+------------+
-                     |  Private subnet      |
-                     |  10.0.2.0/24         |
-                     |                      |
-                     |  PY Worker (m7i-flex)|
-                     |  - inference-worker  |
-                     |  - Gemma 3 270M GGUF |
-                     |  - transformers      |
-                     +---------------------+
-                              |
-                        NAT Gateway
-                              |
-                         Internet
-                       (for pip/git)
-```
+![Architecture-diagram](docs/architecture-diagram_w.png)
 
 **RPC flow:**
 1. Client sends `POST /v1/chat/completions` with JSON body → TS VM port 3111
