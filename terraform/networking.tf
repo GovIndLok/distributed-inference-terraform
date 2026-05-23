@@ -10,6 +10,7 @@ resource "aws_vpc" "di_vpc" {
 
   tags = {
     project = "di_assignment"
+    name    = "di-vpc"
   }
 }
 
@@ -19,6 +20,7 @@ resource "aws_subnet" "public_sn" {
   availability_zone = data.aws_availability_zones.available.names[0]
   tags = {
     project = "di_assignment"
+    name    = "public-sn"
   }
 }
 
@@ -28,6 +30,7 @@ resource "aws_subnet" "private_sn" {
   availability_zone = data.aws_availability_zones.available.names[0]
   tags = {
     project = "di_assignment"
+    name    = "private-sn"
   }
 }
 
@@ -36,6 +39,7 @@ resource "aws_internet_gateway" "di_igw" {
 
   tags = {
     project = "di_assignment"
+    name    = "di-igw"
   }
 }
 
@@ -49,6 +53,7 @@ resource "aws_route_table" "public_rt" {
 
   tags = {
     project = "di_assignment"
+    name    = "public-rt"
   }
 }
 
@@ -61,6 +66,7 @@ resource "aws_eip" "nat_eip" {
   domain = "vpc"
   tags = {
     project = "di_assignment"
+    name    = "public-nat-eip"
   }
 }
 
@@ -72,6 +78,7 @@ resource "aws_nat_gateway" "nat" {
 
   tags = {
     project = "di_assignment"
+    name    = "nat"
   }
 }
 
@@ -85,6 +92,7 @@ resource "aws_route_table" "private_rt" {
 
   tags = {
     project = "di_assignment"
+    name    = "private-rt"
   }
 }
 
