@@ -232,3 +232,16 @@ The `quickstart/` directory was adapted from the [Alchemyst AI hiring repo](http
 - The iii sandbox worker runtime requires KVM virtualization for managed sandbox execution. Standard EC2 instances do not expose `/dev/kvm`. Workers are therefore executed as normal system processes (`III_SANDBOX=process`). This preserves distributed execution and RPC but removes the sandbox isolation layer.
 - Model download (~600 MB GGUF file) happens at bootstrap time. First inference may be slow due to model loading into memory.
 - The bootstrap scripts clone the repo from a hardcoded URL — update `scripts/ts_worker.sh` and `scripts/py_worker.sh` with your repo URL before deploying.
+
+---
+
+## Current Status
+
+This project is a work-in-progress. The Python (inference) VM provisions and downloads the model successfully, but the TypeScript VM has unresolved issues — the `iii` engine and caller-worker are not yet confirmed to be running correctly. As a result, the end-to-end `curl` test may not return a valid response. Further debugging is needed on the TypeScript side (engine startup, worker registration, HTTP listener binding).
+
+---
+
+## Thought Process
+
+A detailed writeup of the implementation journey, mistakes made, and lessons learned is available here:  
+[The Mistake I Made That Broke My Deployment — Govind Lokam](https://open.substack.com/pub/govindlokam/p/the-mistake-i-made-that-broke-my?r=1zvhdw&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true)
