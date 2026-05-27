@@ -1,6 +1,5 @@
 # iii engine configuration
 # Docs: https://iii.dev/docs/how-to/configure-engine
-port : 49134
 
 workers:
   - name: iii-observability
@@ -42,3 +41,7 @@ workers:
         - PUT
         - DELETE
         - OPTIONS
+  - name: caller-worker
+    worker_path: /home/gov03/test/distributed-inference-devops/quickstart/workers/caller-worker
+  - name: math-worker
+    worker_path: /home/gov03/test/distributed-inference-devops/quickstart/workers/inference-worker

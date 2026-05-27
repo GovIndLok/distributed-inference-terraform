@@ -6,7 +6,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 iii = register_worker(
     os.environ.get("III_URL", "ws://localhost:49134"),
-    InitOptions(worker_name="math-worker"),
+    InitOptions(worker_name="inference-worker"),
 )
 logger = Logger()
 
@@ -16,10 +16,11 @@ logger = Logger()
 
 model_id = "ggml-org/gemma-3-270m-GGUF" # "Qwen/Qwen3-0.6B-GGUF"
 gguf_file = "gemma-3-270m-Q8_0.gguf" # "Qwen3-0.6B-Q8_0.gguf"  # Q8 quantized variant
+hf_token = os.environ.get("HF_TOKEN")
 
 # 2. Load tokenizer and model from the GGUF file
-tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf_file)
-model = AutoModelForCausalLM.from_pretrained(model_id, gguf_file=gguf_file)
+tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf_file, token=hf_token)
+model = AutoModelForCausalLM.from_pretrained(model_id, gguf_file=gguf_file, token=hf_token)
 
 tokenizer.chat_template = ("""{{ bos_token }}
 {%- if messages[0]['role'] == 'system' -%}
@@ -96,7 +97,7 @@ def run_inference_handler(payload: Dict[str, str | List[Dict[str, Any]]]) -> Dic
     #     }
     # )
     # result["running_inference"] = new_result
-    return result
+    return {"result": str(result)}
 
 # def add_handler(payload: dict) -> dict:
 #     a = payload.get("a", 0)
