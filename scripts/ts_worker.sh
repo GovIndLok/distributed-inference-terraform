@@ -6,6 +6,7 @@ exec >/var/log/ts-worker-bootstrap.log 2>&1
 
 echo "=-=-= TS worker Bootstrap =-=-="
 
+cd ~/
 # System update
 
 apt-get update -y

@@ -6,6 +6,7 @@ exec >/var/log/py-worker-bootstrap.log 2>&1
 
 echo "=-=-= PY worker Bootstrap =-=-="
 
+cd ~/
 # System update
 
 apt-get update -y
@@ -53,7 +54,7 @@ cd workers/inference-worker
 python3 -m venv .venv
 source .venv/bin/activate
 pip3 install --upgrade pip
-
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 pip3 install -r requirements.txt
 
 # Connecting to remote iii engine
