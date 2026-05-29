@@ -21,7 +21,7 @@ apt-get install -y \
 
 # Add Docker's official GPG key:
 sudo apt install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings -y
+sudo install -m 0755 -d /etc/apt/keyrings 
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -49,4 +49,5 @@ git clone https://github.com/GovIndLok/distributed-inference-terraform.git distr
 
 cd distributed-inference/quickstart
 
+docker build -t inference_worker:latest .
 docker run -d --restart unless-stopped -p 3111:3111 -p 4132:4132 inference_worker:latest

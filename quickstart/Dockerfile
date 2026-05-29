@@ -24,4 +24,4 @@ COPY workers/caller-worker/tsconfig.json ./
 
 ENV III_URL=ws://0.0.0.0:49134
 
-CMD ["sh", "-c", "iii --config config.yaml & sleep 5"]
+CMD ["sh", "-c", "iii --config config.yaml"]
