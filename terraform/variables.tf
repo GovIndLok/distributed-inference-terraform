@@ -21,3 +21,9 @@ variable "environment" {
   type        = string
   default     = "dev"
 }
+
+variable "HF_TOKEN" {
+  description = "Hugging Face API token for model download"
+  type        = string
+  sensitive   = true
+}

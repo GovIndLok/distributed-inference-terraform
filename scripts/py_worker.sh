@@ -22,6 +22,15 @@ apt-get install -y \
     python3-pip \
     python3-venv
 
+# Fetch HF_TOKEN from SSM Parameter Store
+export HF_TOKEN=$(aws ssm get-parameter \
+    --name "/di/hf_token" \
+    --with-decryption \
+    --query "Parameter.Value" \
+    --output text)
+
+echo "HF_TOKEN fetched successfully"
+
 # Installing iii engine
 
 curl -fsSL https://install.iii.dev/iii/main/install.sh | sh

@@ -10,10 +10,6 @@ iii = register_worker(
 )
 logger = Logger()
 
-# 1. Install dependencies
-# pip install transformers accelerate gguf torch
-
-
 model_id = "ggml-org/gemma-3-270m-GGUF" # "Qwen/Qwen3-0.6B-GGUF"
 gguf_file = "gemma-3-270m-Q8_0.gguf" # "Qwen3-0.6B-Q8_0.gguf"  # Q8 quantized variant
 hf_token = os.environ.get("HF_TOKEN")
@@ -78,7 +74,7 @@ def run_inference_handler(payload: Dict[str, str | List[Dict[str, Any]]]) -> Dic
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(text, return_tensors="pt").to(model.device)
 
-    output = model.generate(**inputs, max_new_tokens=32000)
+    output = model.generate(**inputs, max_new_tokens=512)
     result = tokenizer.decode(output[0][inputs["input_ids"].shape[-1]:], skip_special_tokens=True)
 
     print(result)

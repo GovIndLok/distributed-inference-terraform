@@ -41,7 +41,3 @@ workers:
         - PUT
         - DELETE
         - OPTIONS
-  - name: caller-worker
-    worker_path: /home/gov03/test/distributed-inference-devops/quickstart/workers/caller-worker
-  - name: math-worker
-    worker_path: /home/gov03/test/distributed-inference-devops/quickstart/workers/inference-worker

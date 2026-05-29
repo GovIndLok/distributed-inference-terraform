@@ -37,7 +37,7 @@ resource "aws_instance" "ts_worker" {
 # PY worker Instance
 resource "aws_instance" "py_worker" {
   ami           = data.aws_ami.ubunutu.id
-  instance_type = "m7i-flex.large"
+  instance_type = "c7i-flex.large"
 
   subnet_id              = aws_subnet.private_sn.id
   vpc_security_group_ids = [aws_security_group.py_sg.id]

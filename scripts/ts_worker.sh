@@ -19,22 +19,27 @@ apt-get install -y \
     unzip \
     build-essential
 
-# Install bun
+# Add Docker's official GPG key:
+sudo apt install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings -y
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-curl -fsSL https://bun.sh/install | bash
+# Add the repository to Apt sources:
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+sudo apt update -y
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-echo 'export BUN_INSTALL="$HOME/.bun"' >> "$HOME/.bashrc"
-echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$HOME/.bashrc"
-
-# Installing iii engine
-
-curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
-iii --version
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+# Start Docker
+sudo systemctl start docker
 
 # Clone Repo
 
@@ -44,23 +49,4 @@ git clone https://github.com/GovIndLok/distributed-inference-terraform.git distr
 
 cd distributed-inference/quickstart
 
-# Installing TS Dependencies
-cd workers/caller-worker
-bun install
-cd ../..
-
-# START III ENGINE
-
-nohup iii --config config.yaml \
-    >/var/log/iii-engine.log 2>&1 &
-
-echo "Waiting for III engine startup..."
-
-sleep 15
-
-# Connect Caller Worker
-
-export III_URL="ws://localhost:49134"
-export III_SANDBOX=process
-
-iii worker add ./workers/caller-worker
+docker run -d --restart unless-stopped -p 3111:3111 -p 4132:4132 inference_worker:latest

@@ -1,6 +1,6 @@
-name: math-worker
+name: inference-worker
 runtime:
-  language: python
+  kind: python
   package_manager: pip
   entry: inference_worker.py
 scripts:
