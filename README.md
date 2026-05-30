@@ -239,6 +239,10 @@ The `quickstart/` directory was adapted from the [Alchemyst AI hiring repo](http
 
 This project is a work-in-progress. The Python (inference) VM provisions and downloads the model successfully, but the TypeScript VM has unresolved issues — the `iii` engine and caller-worker are not yet confirmed to be running correctly. As a result, the end-to-end `curl` test may not return a valid response. Further debugging is needed on the TypeScript side (engine startup, worker registration, HTTP listener binding).
 
+> **Update:** The root cause of the TypeScript worker issue has been identified. The `iii` engine requires KVM support when running workers as local microVMs, which is unavailable on standard EC2 instances. The issue can be resolved by running the workers as a Docker container and can be done by adding worker to iii using its container image, while the Python inference worker remains unchanged and only requires network access to the engine. The repository follows the intended workflow of building a local worker image and using it to adding the worker, but due to a bug in `iii` CLI, local images are not used and the CLI attempts to pull them from a registry instead. As a temporary workaround, push the image to a registry and replace `caller_worker:latest` image reference in `scripts/ts_worker.sh` final line with the registry image (e.g. `ghcr.io/example-org/ts-worker:latest`).
+>
+> This issue has been reported to the `iii` team and is being tracked here: https://github.com/iii-hq/iii/issues/1718
+
 ---
 
 ## Thought Process

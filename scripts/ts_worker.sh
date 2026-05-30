@@ -63,4 +63,4 @@ docker build -t caller_worker:latest .
 # Start the  III engine
 nohup iii --config config.yaml &
 
-iii worker add caller_worker:latest
+iii worker add caller_worker:latest # change it to image from the registry as a workaround
