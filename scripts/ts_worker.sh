@@ -21,13 +21,13 @@ apt-get install -y \
     build-essential
 
 # Add Docker's official GPG key:
-sudo apt install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings 
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+apt install ca-certificates curl -y
+install -m 0755 -d /etc/apt/keyrings 
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources:
-sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+tee /etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
 Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
@@ -36,11 +36,18 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt update -y
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+# Install Docker Engine
+apt update -y
+apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+# Installing III engine
+curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+iii --version
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
 
 # Start Docker
-sudo systemctl start docker
+systemctl start docker
 
 # Clone Repo
 
@@ -50,5 +57,10 @@ git clone https://github.com/GovIndLok/distributed-inference-terraform.git distr
 
 cd distributed-inference/quickstart
 
-docker build -t inference_worker:latest .
-docker run -d --restart unless-stopped -p 3111:3111 -p 4132:4132 inference_worker:latest
+# Build image from Dockerfile
+docker build -t caller_worker:latest .
+
+# Start the  III engine
+nohup iii --config config.yaml &
+
+iii worker add caller_worker:latest

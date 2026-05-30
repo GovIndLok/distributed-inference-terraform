@@ -11,6 +11,14 @@ resource "aws_security_group" "ts_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # iii engine port (internal only, for Python worker to connect)
+  ingress {
+    from_port   = 49134
+    to_port     = 49134
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]  
+  }
+
   egress {
     description = "Allow all outbound for worker mesh"
     from_port   = 0
@@ -32,9 +40,9 @@ resource "aws_security_group" "py_sg" {
 
   ingress {
     description     = "Allow TS worker via worker mesh"
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
+    from_port       = 49134
+    to_port         = 49134
+    protocol        = "tcp"
     security_groups = [aws_security_group.ts_sg.id]
   }
 

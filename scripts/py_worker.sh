@@ -6,7 +6,9 @@ exec >/var/log/py-worker-bootstrap.log 2>&1
 
 echo "=-=-= PY worker Bootstrap =-=-="
 
+# Navigate to home directory and create an app directory for the worker
 cd ~/
+
 # System update
 
 apt-get update -y
@@ -32,13 +34,6 @@ export HF_TOKEN=$(aws ssm get-parameter \
 
 echo "HF_TOKEN fetched successfully"
 
-# Installing iii engine
-
-curl -fsSL https://install.iii.dev/iii/main/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
-iii --version
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
-
 # Clone Repo
 
 git clone https://github.com/GovIndLok/distributed-inference-terraform.git distributed-inference
@@ -54,7 +49,7 @@ cd workers/inference-worker
 python3 -m venv .venv
 source .venv/bin/activate
 pip3 install --upgrade pip
-pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu # CPU-only PyTorch, remove this line if you want GPU support
 pip3 install -r requirements.txt
 
 # Connecting to remote iii engine
@@ -64,6 +59,4 @@ export III_URL="ws://${ts_private_ip}:49134"
 # Connect Inference Worker (back at quickstart root)
 
 cd ../..
-export III_SANDBOX=process
-
-iii worker add ./workers/inference-worker
+python3 inference_worker.py
